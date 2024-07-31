@@ -5,6 +5,8 @@ import { ProductModule } from './modules/product/product.module';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
 import { DecodedToken } from 'src/common/filters/decoded-token.utils';
+import { JwtModule } from '@nestjs/jwt';
+import { jwtConstants } from './constant/auth.constant';
 
 @Module({
   imports: [
@@ -12,8 +14,12 @@ import { DecodedToken } from 'src/common/filters/decoded-token.utils';
     UserModule,
     ProductModule,
     HttpModule,
-    ConfigModule.forRoot(),
     DecodedToken,
+    ConfigModule.forRoot({ isGlobal: true }),
+    JwtModule.register({
+      global: true,
+      secret: jwtConstants.secret,
+    }),
   ],
 })
 export class AppModule {}

@@ -22,6 +22,10 @@ export class UserService {
   }) {
     const { skip, take, cursor, where, orderBy } = params;
     return this.prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+      },
       skip,
       take,
       cursor,
@@ -31,15 +35,11 @@ export class UserService {
   }
 
   findOne(where: any) {
-    return this.prisma.user.findUnique({
-      where,
-    });
+    return this.prisma.user.findMany(where);
   }
 
   findByUnique(where: any) {
-    return this.prisma.user.findUnique({
-      where,
-    });
+    return this.prisma.user.findUnique(where);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

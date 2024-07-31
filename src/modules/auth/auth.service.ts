@@ -22,33 +22,53 @@ export class AuthService {
     const userExists = await this.userService.findOne({
       where: { username: String(createUserDto.username) },
     });
-    if (userExists) {
+
+    if (userExists.length > 0) {
       throw new BadRequestException('User already exists');
     }
 
     // Hash password
     const hash = await this.hashData(createUserDto.password);
-    const newUser = await this.userService.create({
-      ...createUserDto,
+    const data = {
+      name: createUserDto.name,
+      email: createUserDto.email,
+      username: createUserDto.username,
       password: hash,
-    });
+    };
+    createUserDto.password = hash;
+    const newUser = await this.userService.create({ ...data });
     const tokens = await this.GetTokens(
       Number(newUser.id),
       createUserDto.username,
     );
-    return tokens;
+    return {
+      name: createUserDto.name,
+      email: createUserDto.email,
+      username: createUserDto.username,
+      tokens,
+    };
   }
 
   async SignIn(data: AuthDto) {
     const user = await this.userService.findOne({
       where: { username: String(data.username) },
     });
-    if (!user) throw new BadRequestException('User does not exist');
-    const passwordMatches = await argon2.verify(user.password, data.password);
+    if (user.length === 0) throw new BadRequestException('User does not exist');
+    const passwordMatches = await argon2.verify(
+      user[0].password,
+      data.password,
+    );
+
     if (!passwordMatches)
       throw new BadRequestException('Password is incorrect');
-    const tokens = await this.GetTokens(user.id, user.username);
-    return tokens;
+    const tokens = await this.GetTokens(user[0].id, user[0].username);
+    return {
+      id: user[0].id,
+      name: user[0].name,
+      email: user[0].email,
+      username: user[0].username,
+      tokens,
+    };
   }
 
   async RefreshTokens(refreshToken: string) {
@@ -66,7 +86,7 @@ export class AuthService {
       where: { username: String(accessUser.username) },
     });
     if (!user) throw new BadRequestException('User does not exist');
-    const tokens = await this.GetTokens(user.id, user.username);
+    const tokens = await this.GetTokens(user[0].id, user[0].username);
     return tokens;
   }
 
