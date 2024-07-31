@@ -20,7 +20,7 @@ export class AuthController {
   }
 
   @Get('refresh-token')
-  logout(@Body() { refreshToken }: { refreshToken: string }) {
+  refreshtoken(@Body() { refreshToken }: { refreshToken: string }) {
     this.authService.RefreshTokens(refreshToken);
   }
 }
