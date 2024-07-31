@@ -19,14 +19,13 @@ model User {
   name  String?
   username String?
   password String?
-  posts Post[]
+  Key Key[]
 }
 
-model Post {
+model Key {
   id        Int      @default(autoincrement()) @id
-  title     String
-  content   String?
-  published Boolean? @default(false)
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
+  key     String
+  type   String
+  userKey    User?    @relation(fields: [userKeyId], references: [id])
+  userKeyId  Int?
 }
