@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '../auth/auth.guard';
 import { DecodedToken } from 'src/common/filters/decoded-token.utils';
 import { Request } from 'express';
@@ -21,6 +21,7 @@ import { GenKeyDto } from './dto/generate-key.dto';
 
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
+@ApiTags('Users')
 @Controller('user')
 export class UserController {
   constructor(
@@ -28,11 +29,6 @@ export class UserController {
     private readonly userService: UserService,
     private readonly decodedToken: DecodedToken,
   ) {}
-
-  @Get()
-  findAll() {
-    return this.userService.findAll({});
-  }
 
   @Get(':id')
   findOne(@Param('id') id: string) {

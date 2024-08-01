@@ -13,6 +13,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model UserAdmin {
+  id    Int     @default(autoincrement()) @id
+  email String  @unique
+  name  String?
+  username String?
+  password String?
+  product Product[]
+}
+
+model Product {
+  id        Int      @default(autoincrement()) @id
+  name     String
+  type   String @default("free")
+  description String?
+  userAdmin    UserAdmin?    @relation(fields: [userAdminId], references: [id])
+  userAdminId  Int?
+  userId User?  @relation(fields: [userProductId], references: [id])
+  userProductId  Int?
+}
+
 model User {
   id    Int     @default(autoincrement()) @id
   email String  @unique
@@ -20,12 +40,14 @@ model User {
   username String?
   password String?
   Key Key[]
+  product Product[]
 }
 
 model Key {
   id        Int      @default(autoincrement()) @id
   key     String
   type   String
+  for String?
   userKey    User?    @relation(fields: [userKeyId], references: [id])
   userKeyId  Int?
 }

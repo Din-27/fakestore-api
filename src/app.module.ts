@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { DecodedToken } from 'src/common/filters/decoded-token.utils';
 import { JwtModule } from '@nestjs/jwt';
 import { KeyModule } from './modules/key/key.module';
+import { ProductModule } from './modules/product/product.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { KeyModule } from './modules/key/key.module';
       global: true,
     }),
     KeyModule,
+    ProductModule,
   ],
 })
 export class AppModule {}

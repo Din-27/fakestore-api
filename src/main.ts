@@ -4,17 +4,15 @@ import compression from 'compression';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import helmet from 'helmet';
-declare const module: any;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser());
   const config = new DocumentBuilder()
     .addBearerAuth()
-    .setTitle('Cats example')
+    .setTitle('Fake Store Api')
     .setDescription('The cats API description')
     .setVersion('1.0')
-    .addTag('Fake Store API')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
@@ -43,11 +41,6 @@ async function bootstrap() {
       },
     }),
   );
-  await app.listen(3000);
-
-  if (module.hot) {
-    module.hot.accept();
-    module.hot.dispose(() => app.close());
-  }
+  await app.listen(3001);
 }
 bootstrap();
